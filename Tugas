@@ -1,0 +1,166 @@
+public class IuranWarga {
+    Integer NIK,Sampah,Keamanan,Sumbangan;
+
+    public Integer getNIK() {
+        return NIK;
+    }
+
+    public void setNIK(Integer NIK) {
+        this.NIK = NIK;
+    }
+
+    public Integer getSampah() {
+        return Sampah;
+    }
+
+    public void setSampah(Integer Sampah) {
+        this.Sampah = Sampah;
+    }
+
+    public Integer getKeamanan() {
+        return Keamanan;
+    }
+
+    public void setKeamanan(Integer Keamanan) {
+        this.Keamanan = Keamanan;
+    }
+
+    public Integer getSumbangan() {
+        return Sumbangan;
+    }
+
+    public void setSumbangan(Integer Sumbangan) {
+        this.Sumbangan = Sumbangan;
+    }
+}
+
+
+import java.util.Scanner;
+
+public class Overloading {
+
+    public DataWarga inputDataWarga(){
+        DataWarga dataWarga=new DataWarga();
+        Scanner sc=new Scanner(System.in);
+        System.out.println("* Data Warga *");
+        System.out.println("Masukan Nama : ");
+        dataWarga.setNama(sc.nextLine());
+        System.out.println("Masukan NIK : ");
+        dataWarga.setNik(sc.nextLine());
+        System.out.println("Masukan Alamat : ");
+        dataWarga.setAlamat(sc.nextLine());
+        System.out.println("Masukan No. Tlp : ");
+        dataWarga.setNoTelp(sc.nextLine());
+        System.out.println("---------------------o0o-------------------------");
+        System.out.println("* Data Pekerjaan *");
+        System.out.println("Masukan Pekerjaan : ");
+        dataWarga.setJenis_pekerjaan(sc.nextLine());
+        System.out.println("Masukan Alamat Kantor : ");
+        dataWarga.setAlamat_kantor(sc.nextLine());
+        System.out.println("---------------------o0o-------------------------");
+        System.out.println("* Data Status *");
+        System.out.println("Masukan Status : ");
+        dataWarga.setStatus(sc.nextLine());
+        System.out.println("Masukan Nama Suami/Istri : ");
+        dataWarga.setNamaPasangan(sc.nextLine());
+        System.out.println("Masukan Jumlah Anak : ");
+        dataWarga.setJml_anak(sc.nextInt());
+
+        return dataWarga;
+    }
+
+}
+
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class Overriding extends IuranWarga{
+
+
+    public void inputDataIuran(String nik){
+        Integer NIK=0;
+        Scanner sc=new Scanner(System.in);
+        System.out.println("* Data Iuran Pokok *");
+        do{
+            System.out.println("NIK : ");
+            NIK = sc.nextInt();
+            if(!NIK.toString().equalsIgnoreCase(nik)){
+                System.out.println("NIK Tidak Sesuai");
+            }
+            setNIK(NIK);
+        }while (!NIK.toString().equalsIgnoreCase(nik));
+
+        System.out.println("Masukan Iuran Sampah : ");
+        setSampah(sc.nextInt());
+        System.out.println("Masukan Iuran Keamanan : ");
+        setKeamanan(sc.nextInt());
+        System.out.println("* Data Iuran Sekunder *");
+        System.out.println("Masukan Sumbangan : ");
+        setSumbangan(sc.nextInt());
+    }
+
+    public List<Integer> getResult(){
+        List<Integer> dataReturn=new ArrayList();
+
+        dataReturn.add(getNIK());
+        dataReturn.add(getSampah()+getKeamanan()+getSumbangan());
+
+        return dataReturn;
+    }
+}
+
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class Main extends IuranWarga {
+    public static void main(String[] args) {
+        int pilih=0;
+        String lanjut;
+        DataWarga dataWarga=new DataWarga();
+
+        Overloading overloading=new Overloading();
+        Overriding overriding=new Overriding();
+        List<Integer> result=new ArrayList<Integer>();
+        do{
+            Scanner sc=new Scanner(System.in);
+
+            if(dataWarga.getNama()!=null){
+                System.out.println("Lanjut Bayar Iuran ?");
+                lanjut=sc.nextLine();
+                if(lanjut.equalsIgnoreCase("ya")){
+                    pilih=2;
+                }else{
+                    pilih=0;
+                }
+            }else{
+                System.out.println("=====================================");
+                System.out.println("Pendataan dan Pembayaran Iuran Warga");
+                System.out.println("=====================================");
+                System.out.println("1. Input Data Warga");
+                System.out.println("2. Input Iuran Warga");
+                System.out.print("Pilihan Menu : ");
+                pilih = sc.nextInt();
+            }
+            System.out.println("-----------------o0o-----------------");
+            if(pilih==1){
+                dataWarga = overloading.inputDataWarga();
+            }else if(pilih==2){
+                overriding.inputDataIuran(dataWarga.getNik());
+                result =  overriding.getResult();
+            }
+        }while (pilih!=0);
+
+        System.out.printf("|| %-28s || %-10s ",
+                "NIK",result.get(0));
+        System.out.println();
+        System.out.printf("|| %-10s || %-5s ",
+                "Total Pembayaran Iuran Warga",result.get(1));
+        System.out.println();
+        System.out.println("Terimakasih "+dataWarga.getNama()+" Iuran Anda Sudah di Bayarkan");
+
+    }
+}
